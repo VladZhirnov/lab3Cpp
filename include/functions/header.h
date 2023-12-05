@@ -14,15 +14,7 @@ public:
     void add_copy();
     size_t get_comparison();
     size_t get_copy();
-    void reset() {
-        comparison_count = 0;
-        copy_count = 0;
-    }
-
-    void print() const {
-        std::cout << "Comparison Count: " << comparison_count << std::endl;
-        std::cout << "Copy Count: " << copy_count << std::endl;
-    }
+    void print() const;
 };
 
 stats::stats() {
@@ -46,6 +38,10 @@ size_t stats::get_copy() {
     return copy_count;
 }
 
+void stats::print() const {
+    std::cout << "Comparison Count: " << comparison_count << std::endl;
+    std::cout << "Copy Count: " << copy_count << std::endl;
+}
 
 stats bubble_sort(std::vector<int>& arr) {
     stats s;
@@ -132,7 +128,7 @@ stats heap_sort(std::vector<int>& arr) {
     stats s;
 
     // Построение max-heap
-    for (size_t i = n / 2 - 1; i != SIZE_MAX; --i) {
+    for (size_t i = n / 2 - 1; i != -1; --i) {
         heapify(arr, n, i, s);
     }
 
@@ -157,7 +153,6 @@ void my_iota(std::vector<int>& v, int start) {
 void sorted_array(size_t size, int index) {
     std::vector<int> arr(size);
     stats s;
-    s.reset();
     my_iota(arr, 1);
     if (index == 1){
         s = bubble_sort(arr);
@@ -176,7 +171,6 @@ void sorted_array(size_t size, int index) {
 void reverse_sorted_array(size_t size, int index) {
     std::vector<int> arr(size);
     stats s;
-    s.reset();
     my_iota(arr, 1);
 
     for (size_t i = 0; i < size / 2; ++i) {
@@ -198,7 +192,7 @@ void reverse_sorted_array(size_t size, int index) {
     std::cout << "----------------------" << std::endl;
 }
 
-void random_experiment(const std::vector<size_t>& array_sizes, int index) {
+void random_array(const std::vector<size_t>& array_sizes, int index) {
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937 generator(seed);
 
@@ -206,14 +200,13 @@ void random_experiment(const std::vector<size_t>& array_sizes, int index) {
         std::cout << " Array Size: " << size << std::endl;
         size_t sum_comparison = 0;
         size_t sum_copy = 0;
-        for (int experiment = 0; experiment < 100; ++experiment) {
+        for (int i = 0; i < 100; ++i) {
             std::vector<int> arr(size);
             my_iota(arr, 1);
 
             // Перемешиваем массив случайным образом
             std::shuffle(arr.begin(), arr.end(), generator);
 
-            // Запускаем сортировку
             stats s;
             if (index == 1) {
                 s = bubble_sort(arr);
